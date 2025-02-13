@@ -21,6 +21,13 @@ jobs:
         run: |
           echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
 
+      - name: Verify binary file exists
+        run: |
+          if [ ! -f "cpslint_Linux_x86_64.tar.gz" ]; then
+            echo "Binary file not found!"
+            exit 1
+          fi
+
       - name: Create GitHub release
         uses: ncipollo/release-action@v1
         with:
