@@ -1,0 +1,32 @@
+name: Create Release on Tag
+
+on:
+  push:
+    # branches:
+    #   - main
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set version from tag
+        run: |
+          echo "VERSION=${GITHUB_REF#refs/tags/}" >> $GITHUB_ENV
+
+      - name: Create GitHub release
+        uses: ncipollo/release-action@v1
+        with:
+          tag: ${{ env.VERSION }}
+          name: "Release ${{ env.VERSION }}"
+          body: "Release for version ${{ env.VERSION }}"
+          draft: false
+          prerelease: false
+          artifacts: "cpslint_Linux_x86_64.tar.gz"
